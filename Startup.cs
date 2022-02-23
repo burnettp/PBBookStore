@@ -39,6 +39,11 @@ namespace PBBookStore
             
             //Repository pattern setup
             services.AddScoped<IBookstoreRepository, EFBookstoreRepository>();
+
+            services.AddRazorPages();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,13 +56,35 @@ namespace PBBookStore
 
             //Tells the project to use the files in the wwwroot folder
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
+                //Enpoints are executed in order, so if we did default first, the MapControllerRoute ep wouldn't work
+                //You can also write endpoints in different ways. Below are two ways to write them
+
+                //This endpoint cleans up URL when user passes book category and page number
+                endpoints.MapControllerRoute("categorypage",
+                    "{bookCategory}/Page{pageNum}",
+                    new { Controller = "Home", action = "Index" });
+
+                //This endpoint cleans up our URL and shows what we put on pattern in the URL instead of the parameters and ? etc
+                endpoints.MapControllerRoute(
+                    name: "Paging",
+                    pattern: "Page{pageNum}",
+                    defaults: new { Controller = "Home", action = "Index", pageNum = 1});
+
+                //This endpoint cleans up the URL when we only get a category passed
+                endpoints.MapControllerRoute("category",
+                    "{bookCategory}",
+                    new { Controller = "Home", action = "Index", pageNum = 1 });
+
                 //This line sets the endpoint to be default, which is Controller -> Action -> ID
                 endpoints.MapDefaultControllerRoute();
+
+                //Enables razor pages
+                endpoints.MapRazorPages();
             });
         }
     }
