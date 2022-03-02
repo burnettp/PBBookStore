@@ -19,7 +19,8 @@ namespace PBBookStore.Models
         {
         }
 
-        // Name of the table
+        // Name of the table and the link to the database
         public DbSet<Book> Books { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
     }
 }
