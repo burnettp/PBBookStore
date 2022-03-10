@@ -1,0 +1,28 @@
+﻿@inherits LayoutComponentBase
+
+<div class="">
+    <span class="navbar-brand m-lg-2">Book store Administration</span>
+</div>
+
+<div class="container-fluid">
+
+    <div class="row p-2">
+
+        <div class="col-3">
+
+            <div class="d-grid gap-2">
+                <NavLink class="btn btn-outline-primary" href="/admin/books"
+                         ActiveClass="btn-primary text-white" Match="NavLinkMatch.Prefix"><mark>Books</mark></NavLink> <!--This line contains the other bootstrap element I experimented with-->
+
+                <NavLink class="btn btn-outline-primary" href="/admin/purchases"
+                         ActiveClass="btn-primary text-white" Match="NavLinkMatch.Prefix">Purchases</NavLink>
+            </div>
+
+        </div>
+
+        <div class="col">
+            @Body
+        </div>
+
+    </div>
+</div>

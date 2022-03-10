@@ -48,9 +48,12 @@ namespace PBBookStore
 
             services.AddScoped<Basket>(x => SessionBasket.GetBasket(x)); //Any time we are looking at a Basket, this line will call the GetBasket method which will either create a new one or use an existing one
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddServerSideBlazor(); //Adds Blazor functionality
+            services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        //This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -89,6 +92,9 @@ namespace PBBookStore
 
                 //Enables razor pages
                 endpoints.MapRazorPages();
+
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
             });
         }
     }
