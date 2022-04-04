@@ -25,20 +25,24 @@ namespace PBBookStore.Controllers
             repo = temp;
         }
 
-        public IActionResult Index(int pageNum = 1) //don't ever use 'page' because that name is reserved and it will break
+        public IActionResult Index(string bookCategory, int pageNum = 1) //don't ever use 'page' because that name is reserved and it will break
         {
             int pageSize = 10; //this will be the number of results we see per page
 
             var x = new BooksViewModel
             {
                 Books = repo.Books
+                .Where(x => x.Category == bookCategory || bookCategory == null) //Filters based on Category
                 .OrderBy(x => x.Title) //Orders the results
                 .Skip((pageNum - 1) * pageSize) //skips 5 records, starts at page 0 (1) because it multiplies by 5
                 .Take(pageSize), //Only shows 'pageSize' results
 
                 PageInfo = new PageInfo
                 {
-                    TotalNumBooks = repo.Books.Count(),
+                    TotalNumBooks = 
+                        (bookCategory == null
+                            ? repo.Books.Count()
+                            : repo.Books.Where(x => x.Category == bookCategory).Count()),
                     BooksPerPage = pageSize,
                     CurrentPage = pageNum
                 }
